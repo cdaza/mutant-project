@@ -8,7 +8,7 @@ blueprint = Blueprint('api', __name__)
 api = Api(blueprint,
           title='Mutant detect API',
           version='0.1',
-          description='Mutant detect API detecta secuencias de ADN mutantes '
+          description='Mutant detect API. Is an API to identify DNA mutations'
           )
 
 api.add_namespace(mutant_ctrl, path='/api/v1')

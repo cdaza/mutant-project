@@ -1,22 +1,24 @@
 from http import HTTPStatus
 
 from flask import current_app
-from flask_restx import Resource, marshal
+from flask import request
+from flask_restx import Resource, fields
 
 from ..model.mutant_model import MutantModel
 from ..parser.mutant_parser import mutant_parser
 from ..service.mutant_service import validate_sequence
 
 api = MutantModel.api
+dna = MutantModel.dna
 
 
 @api.route("/mutant")
 @api.response(int(HTTPStatus.UNAUTHORIZED), "Unauthorized.")
 class UploadFile(Resource):
-    @api.expect(mutant_parser)
+    @api.expect(dna)
     def post(self):
         """
-        Endpoint para validar secuencias de ADN
+        Endpoint to validate DNA sequences
         """
 
         args = mutant_parser.parse_args()
