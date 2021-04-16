@@ -23,5 +23,7 @@ class UploadFile(Resource):
 
         args = mutant_parser.parse_args()
         list_dna = args['dna']
-        message = validate_sequence(list_dna)
-        return message
+        is_mutant, message = validate_sequence(list_dna)
+        if is_mutant:
+            return message, 200
+        return message, 403
