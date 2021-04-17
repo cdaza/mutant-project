@@ -25,3 +25,7 @@ MANIFEST
 
 # pycharm
 .idea/
+
+# coverage
+.coverage
+coverage/
