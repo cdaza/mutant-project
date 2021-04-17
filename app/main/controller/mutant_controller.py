@@ -21,7 +21,7 @@ class MutantValidation(Resource):
 
         args = mutant_parser.parse_args()
         dna_list = args['dna']
-        is_mutant = validate_sequence(dna_list)
+        is_mutant, message = validate_sequence(dna_list)
         if is_mutant:
-            return 200
-        return 403
+            return message, 200
+        return message, 403

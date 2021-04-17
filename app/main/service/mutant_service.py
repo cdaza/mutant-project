@@ -15,7 +15,9 @@ def validate_sequence(dna_list):
         else:
             result_is_mutant = bool(previous_value)
 
-        return result_is_mutant
+        message = 'Mutant detected' if result_is_mutant else 'Human detected'
+
+        return result_is_mutant, message
     else:
         return False, "Looks like your DNA sequence is incomplete"
 
