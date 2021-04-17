@@ -1,5 +1,5 @@
 from ..utils.matrix_utils import get_matrix_from_list, validate_square_matrix, get_sequences_detected
-from ..utils.redis_utils import insert_key_value
+from ..utils.redis_utils import insert_key_value, get_value_from_key, insert_key_dict, get_dict_from_key
 from ..enum.operations_enum import Operations
 
 
@@ -7,18 +7,48 @@ def validate_sequence(dna_list):
     matrix = get_matrix_from_list(dna_list)
     square_matrix = validate_square_matrix(matrix)
     if square_matrix:
-        result_is_mutant = is_mutant(matrix)
-        save_result_db(dna_list, result_is_mutant)
+        key = get_key_from_list(dna_list)
+        previous_value = get_value_from_key(key)
+        if previous_value is None:
+            result_is_mutant = is_mutant(matrix)
+            save_result_db(key, result_is_mutant)
+        else:
+            result_is_mutant = bool(previous_value)
 
         return result_is_mutant
     else:
         return False, "Looks like your DNA sequence is incomplete"
 
 
-def save_result_db(dna_list, result_is_mutant):
-    key = (''.join(dna_list))
-    value = int(result_is_mutant[0])
-    insert_key_value(key, value)
+def save_result_db(key, result_is_mutant):
+    is_mutant_value = result_is_mutant
+    value = int(result_is_mutant)
+    success = insert_key_value(key, value)
+    if success:
+        key_stats = "stats"
+        result = get_dict_from_key(key_stats)
+        count_mutant_dna_value = 1 if is_mutant_value else 0
+        count_human_dna_value = 0 if is_mutant_value else 1
+
+        if any(result.values()):
+            count_mutant_dna = int(result[b'count_mutant_dna']) + count_mutant_dna_value
+            count_human_dna = int(result[b'count_human_dna']) + count_human_dna_value
+            insert_dict_stats(key_stats, count_mutant_dna, count_human_dna)
+        else:
+            insert_dict_stats(key_stats, count_mutant_dna_value, count_human_dna_value)
+
+
+def insert_dict_stats(key_stats, count_mutant_dna, count_human_dna):
+    dict_stats = {
+        "count_mutant_dna": count_mutant_dna,
+        "count_human_dna": count_human_dna,
+    }
+
+    insert_key_dict(key_stats, dict_stats)
+
+
+def get_key_from_list(dna_list):
+    return ''.join(dna_list)
 
 
 def is_mutant(matrix):
@@ -61,6 +91,6 @@ def is_mutant(matrix):
             row = row + 1
     except ValueError as e:
         print(e)
-        return True, str(e)
+        return True
 
-    return False, 'is ok'
+    return False

@@ -26,5 +26,4 @@ def init_clients(app, app_settings):
             port=app_settings['REDIS_PORT']
         )
 
-
     return redis_client

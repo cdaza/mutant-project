@@ -12,7 +12,7 @@ dna = MutantModel.dna
 
 @api.route("/mutant")
 @api.response(int(HTTPStatus.UNAUTHORIZED), "Unauthorized.")
-class UploadFile(Resource):
+class MutantValidation(Resource):
     @api.expect(dna)
     def post(self):
         """
@@ -21,7 +21,7 @@ class UploadFile(Resource):
 
         args = mutant_parser.parse_args()
         dna_list = args['dna']
-        is_mutant, message = validate_sequence(dna_list)
+        is_mutant = validate_sequence(dna_list)
         if is_mutant:
-            return message, 200
-        return message, 403
+            return 200
+        return 403
