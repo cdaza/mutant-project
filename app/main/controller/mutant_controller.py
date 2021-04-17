@@ -1,8 +1,6 @@
 from http import HTTPStatus
 
-from flask import current_app
-from flask import request
-from flask_restx import Resource, fields
+from flask_restx import Resource
 
 from ..model.mutant_model import MutantModel
 from ..parser.mutant_parser import mutant_parser
@@ -22,8 +20,8 @@ class UploadFile(Resource):
         """
 
         args = mutant_parser.parse_args()
-        list_dna = args['dna']
-        is_mutant, message = validate_sequence(list_dna)
+        dna_list = args['dna']
+        is_mutant, message = validate_sequence(dna_list)
         if is_mutant:
             return message, 200
         return message, 403

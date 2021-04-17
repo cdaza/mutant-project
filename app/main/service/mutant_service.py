@@ -1,4 +1,5 @@
 from ..utils.matrix_utils import get_matrix_from_list, validate_square_matrix, get_sequences_detected
+from ..utils.redis_utils import insert_key_value
 from ..enum.operations_enum import Operations
 
 
@@ -6,9 +7,18 @@ def validate_sequence(dna_list):
     matrix = get_matrix_from_list(dna_list)
     square_matrix = validate_square_matrix(matrix)
     if square_matrix:
-        return is_mutant(matrix)
+        result_is_mutant = is_mutant(matrix)
+        save_result_db(dna_list, result_is_mutant)
+
+        return result_is_mutant
     else:
         return False, "Looks like your DNA sequence is incomplete"
+
+
+def save_result_db(dna_list, result_is_mutant):
+    key = (''.join(dna_list))
+    value = int(result_is_mutant[0])
+    insert_key_value(key, value)
 
 
 def is_mutant(matrix):
