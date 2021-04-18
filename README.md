@@ -76,7 +76,7 @@ Get historical stats based on the historical sequences validated.
 }
 ```
 
-#Setup
+# Setup
 
 ## Run Locally
 
@@ -104,7 +104,7 @@ Get historical stats based on the historical sequences validated.
 - ``` go to coverage folder and open the index.html to get a complete report```
 
 
-#Live API
+# Live API
 
 ### This API was deployed using the Google Cloud Run
 
